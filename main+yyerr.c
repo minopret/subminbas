@@ -17,9 +17,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#ifdef THINK_C
-	#include <console.h>
-#endif
 #include "yydebug.h"
 
 
@@ -31,8 +28,12 @@ extern int line_no;				/* current input line number - */
 	/* note line_no must be defined by the programmer */
 
 
-static char *source;			/* input file name, from main() */
-FILE * yyerfp = NULL;			/* error stream */
+/* function defined by subminbas.tab.c */
+
+extern int yyparse(void);
+
+
+static FILE *yyerfp;			/* error stream */
 
 
 /* prototypes for this file's functions */
@@ -45,34 +46,32 @@ void yywhere(void);
 
 static void
 usage(register char *name) {
-	fputs("usage: ", stderr);
-	fputs(name, stderr);
-	fputs(" [source]\n", stderr);
-	exit(1);
-	} /* usage */
+	(void) fputs("usage: ", stderr);
+	(void) fputs(name, stderr);
+	(void) fputs(" [source]\n", stderr);
+	exit(EXIT_FAILURE);
+} /* usage */
 	
 	
 int
 main(int argc, char **argv) {
-	char **argp;
+	int i;
+	char *source;			/* input file name, from main() */
 #if YYDEBUG!=0
 	extern int yydebug;
 	
 	yydebug = 1;
 #endif
-#ifdef THINK_C
-	argc = ccommand(&argv);
-#endif
 
-    yyerfp = stdout;
-    
-	for (argp = argv; *++argp && **argp == '-'; ) {
-		switch ((*argp)[1]) {
+	yyerfp = stdout;
+
+	for (i=1; i < argc && argv[i][0] == '-'; i++) {
+		switch (argv[i][1]) {
 			/* catch allowed flags here -- currently none */
 		default:
 			usage(argv[0]);
-			}
 		}
+	}
 	
 	
 	/* If no non-option arguments, read from stdin;
@@ -80,85 +79,70 @@ main(int argc, char **argv) {
 	 * If more non-option arguments, display usage message.
 	 */
 	 
-	if (argp[0]) { /* have an additional argument */
-		if (argp[0] && argp[1]) {
+	if (i < argc) { /* have an additional argument */
+		if (i + 1 < argc) {
 			/* only one additional argument is allowed after flags */
 			usage(argv[0]);
-			}
-		else { /* have one non-option argument */
-			if (*argp && !freopen(*argp, "r", stdin)) {
+		} else { /* have one non-option argument */
+			char *arg = argv[i];
+			if (!freopen(arg, "r", stdin)) {
 				/* error if can't open file as stdin */
-				perror(*argp);
-				exit(1);
-				}
-			if ( source = (char *) malloc( (strlen(*argp)+1) * sizeof(char) ) ) {
-				strcpy(source, *argp);
-				}
-			else {
+				perror(arg);
+				exit(EXIT_FAILURE);
+			}
+			source = (char *) malloc((strlen(arg) + 1) * sizeof(char));
+			if (source) {
+				strcpy(source, arg);
+			} else {
 				/* error if can't allocate space for "source" */
 				perror(argv[0]);
-				exit(1);
-				}
-			} /* if(argp[0]&&argp[1]) else */
-		} /* if(arpg[0]) */
+				exit(EXIT_FAILURE);
+			}
+		} /* if(i + 1 < argc) else */
+	} /* if(i < argc) */
 	exit(yyparse());
-	} /* main */
+} /* main */
+
+
+extern int yynerrs;		/* total number of errors */
 
 
 void
 yyerror(register char *s) {
-	extern int yynerrs;		/* total number of errors */
-	
 	fprintf(yyerfp, "[error %d] ", yynerrs);
 	yywhere();
-	fputs(s, yyerfp);
-	putc('\n', yyerfp);
-	}	/* yyerror */
+	(void) fputs(s, yyerfp);
+	(void) putc('\n', yyerfp);
+}	/* yyerror */
 
 
 void
 yywhere(void) {					/* provide position stamp */
-	char colon = 0;				/* a flag */
+	int colon = 0;				/* a flag */
+	register int i;
 
-#if 0
-	/* I now don't care to print the source file's name -
-	 * this can be done by a setup action instead. */
-	 
-	if (source && *source && strcmp(source, "\"\"")) {
-		char *cp = source;
-		int len = strlen(source);
-		
-		if (*cp == '"') {
-			++cp, len -= 2;
-			}
-		fprintf(yyerfp, "file %.*s", len, cp);
-		colon = 1;
-		}
-#endif
 	if (line_no > 0) {
-		if (colon) {
-			fputs(", ", yyerfp);
-			}
+		if (colon != 0) {
+			(void) fputs(", ", yyerfp);
+		}
 		fprintf(yyerfp, "line %d", line_no);
 		colon = 1;
+	}
+
+	for (i=0; i < 20; ++i) {
+		if (yytext[i] == '\0' || yytext[i] == '\n') {
+			break;
 		}
-	if (*yytext) {
-		register int i;
-		
-		for (i=0; i < 20; ++i) {
-			if (!yytext[i] || yytext[i] == '\n') {
-				break;
-				}
-			}
-		if (i) {
-			if (colon) {
-				putc(' ', yyerfp);
-				}
-			fprintf(yyerfp, "near \"%.*s\"", i, yytext);
-			colon = 1;
-			}
+	}
+	if (i > 0) {
+		if (colon != 0) {
+			(void) putc(' ', yyerfp);
 		}
-	if (colon) {
-		fputs(": ", yyerfp);
-		}
-	} /* yywhere */
+		fprintf(yyerfp, "near \"%.*s\"", i, yytext);
+		colon = 1;
+	}
+
+	if (colon != 0) {
+		(void) fputs(": ", yyerfp);
+	}
+} /* yywhere */

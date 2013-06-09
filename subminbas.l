@@ -14,19 +14,13 @@
 
 #ifdef DEBUG		/* debugging version */
 
-	#ifdef THINK_C
-		#include <console.h>
-	#endif	
 	char *rettokname;
 	
 	int main(int argc, char **argv) {
-	#ifdef THINK_C
-		argc = ccommand(&argv);
-	#endif
 		while (yylex()) {
 			printf("%-10.10s is \"%s\"\n", rettokname, yytext);
-			}
 		}
+	}
 	
 	s_lookup() {}
 	int yynerrs = 0;
@@ -127,7 +121,7 @@ strchar				[A-Z0-9 "&'*^):,$=!><#(%?;/_+.-]
 static struct rwtable {		/* reserved word table */
 	char *rw_name;			/* representation */
 	int rw_yylex;			/* yylex() value */
-	} rwtable[] = {			/* sorted */
+} rwtable[] = {				/* sorted */
 	"END",		rwtoken(END),
 	"FOR",		rwtoken(FOR),
 	"GO",		rwtoken(GO),
@@ -143,7 +137,7 @@ static struct rwtable {		/* reserved word table */
 	"STOP",		rwtoken(STOP),
 	"THEN",		rwtoken(THEN),
 	"TO",		rwtoken(TO)
-	};
+};
 
 static int screen() {
 	struct rwtable *low = rwtable,
@@ -159,19 +153,17 @@ static int screen() {
 		#endif
 			if (strcmp("REM", mid->rw_name) == 0) {
 				BEGIN remark;
-				}
+			}
 			return mid->rw_yylex;
-			}
-		else if (c < 0) {
+		} else if (c < 0) {
 			low = mid + 1;
-			}
-		else {
+		} else {
 			high = mid - 1;
-			}
 		}
+	}
 	return token(RemarkString);
 	/* The RemarkString token type returned for unmatched strings is
 	 * guaranteed to cause a syntax error at the parser, and sort of
 	 * appropriate */
 
-	} /* screen */
+} /* screen */
