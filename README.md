@@ -13,6 +13,8 @@ multiplication may be used instead. There is no GOSUB statement.
     make
     make test
 
+The test is silent when successful.
+
 The input for the test is the error-filled BASIC file
 "test/provoke.bas". The expected output is in the file
 "test/provoke.out.expected".
