@@ -1,0 +1,68 @@
+[error 1] line 90 near "95": syntax error
+line 90 near "95": statement: error
+line 90 near "95": statement: error
+line 90 near " LET": statement: error
+line 90 near "A": statement: error
+line 90 near "=": statement: error
+line 90 near "5": statement: error
+line 100 near " PROGRAM": statement: error
+line 100 near " PROGRAM": statement: error
+line 100 near "P": statement: error
+line 100 near "R": statement: error
+line 100 near "O": statement: error
+line 100 near "V": statement: error
+line 100 near "O": statement: error
+line 100 near "K": statement: error
+line 100 near "E": statement: error
+line 100 near "_": statement: error
+line 100 near "E": statement: error
+line 100 near "R": statement: error
+line 100 near "R": statement: error
+line 100 near "O": statement: error
+line 100 near "R": statement: error
+line 100 near "S": statement: error
+[error 2] line 110 near " PROVOKE": syntax error
+line 110 near " PROVOKE": statement: error
+line 110 near " PROVOKE": statement: error
+line 110 near " EVERY": statement: error
+line 110 near " POSSIBLE": statement: error
+line 110 near " SYNTAX": statement: error
+line 110 near "E": statement: error
+line 110 near "R": statement: error
+line 110 near "R": statement: error
+line 110 near "O": statement: error
+line 110 near "R": statement: error
+line 110 near ",": statement: error
+line 110 near " IN": statement: error
+line 110 near " ORDER": statement: error
+[error 3] line 116 near "`": syntax error
+line 116 near "`": statement: error
+line 116 near "`": statement: error
+[error 4] line 118: syntax error
+line 118: statement: error
+[error 5] line 120 near ")": syntax error
+line 120 near ")": numeric_expression: '(' error ')'
+[error 6] line 130 near "A": syntax error
+line 130 near "A": line_number_ref_list: error
+line 130 near "B": line_number_ref_list: line_number_ref_list error
+line 130 near "1": line_number_ref_list: line_number_ref_list error line_number_ref
+[error 7] line 130 near "C": syntax error
+line 130 near "C": line_number_ref_list: line_number_ref_list ',' error
+line 130: line_number_ref_list: line_number_ref_list error
+[error 8] line 140 near "+": syntax error
+line 140 near "+": print_list: print_list error
+line 140 near "+": print_list: print_list error
+[error 9] line 150 near "1": syntax error
+line 150 near "1": variable_list: error
+line 150 near "2": variable_list: variable_list error
+line 150 near "A": variable_list: variable_list error variable
+[error 10] line 150 near "3": syntax error
+line 150 near "3": variable_list: variable_list ',' error
+line 150: variable_list: variable_list error
+[error 11] line 170 near "170": syntax error
+line 170 near "170": program: blocks end_line error
+line 170 near "170": blocks: error
+line 170: blocks: blocks error
+line 180 near "180": blocks: blocks error
+[error 12] line 180: syntax error
+line 180: program: blocks error
