@@ -1,7 +1,7 @@
 "subminbas" is a syntax checker for a subset of the ANSI Minimal
 BASIC programming language. The copyright for the syntax checker
-belongs to me, Aaron Mansheim. I have not decided upon a free or
-open-source license for this software.
+belongs to me, Aaron Mansheim. See the file `LICENSE` for the
+terms under which I provide it. (Hint: `GPL-3.0-or-later`)
 
 The "sub-Minimal BASIC" programming language is quite a restricted
 language. For example, all line numbers must be from one to four
